@@ -1,0 +1,34 @@
+diff --git a/core/misc/states.js b/core/misc/states.js
+index b969da7..663176f 100644
+--- a/core/misc/states.js
++++ b/core/misc/states.js
+@@ -80,6 +80,20 @@
+       // The "reference" variable is a comparison function.
+       return reference(value);
+     },
++   'Array': function (reference, value) {
++     // Make sure value is an array.
++     if (Array.isArray(value)) {
++       return false;
++     }
++     // We iterate through each value provided in the reference. If all of them
++     // exist in value array, we return true. Otherwise return false.
++     for (var key in reference) {
++       if (reference.hasOwnProperty(key) && value.indexOf(reference[key]) === -1) {
++         return false;
++       }
++     }
++     return true;
++   },
+     'Number': function (reference, value) {
+       // If "reference" is a number and "value" is a string, then cast reference
+       // as a string before applying the strict comparison in compare(). Otherwise
+@@ -121,7 +135,7 @@
+           state = states.State.sanitize(state);
+ 
+           // Initialize the value of this state.
+-          this.values[selector][state.name] = null;
++          this.values[selector][state.name] = undefined;
+ 
+           // Monitor state changes of the specified state for this dependee.
+           $(selector).on('state:' + state, {selector: selector, state: state}, stateEventHandler);

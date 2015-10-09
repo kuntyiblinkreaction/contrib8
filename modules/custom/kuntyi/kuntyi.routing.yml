@@ -1,0 +1,6 @@
+kuntyi.form:
+path: '/kuntyi/form'
+  defaults:
+    _form: '\Drupal\kuntyi\Form\KuntyiForm'
+  requirements:
+    _permission: 'access content'
