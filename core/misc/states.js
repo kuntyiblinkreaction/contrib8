@@ -71,7 +71,6 @@
      *   arbitrary AND and OR clauses.
      */
     states.Dependent = function (args) {
-
         $.extend(this, {values: {}, oldValue: null}, args);
 
         this.dependees = this.getDependees();
@@ -97,22 +96,6 @@
         RegExp: function (reference, value) {
             return reference.test(value);
         },
-        'Array': function (reference, value) {
-            var operator = jQuery.grep(reference, function( a ) {
-                return jQuery.isArray(a);
-            });
-            if (operator.length === 0) {
-                operator = ['and'];
-            }
-            reference = jQuery.grep(reference, function( a ) {
-                return jQuery.type(a) != 'array';
-            });
-
-            if (jQuery.isArray(value) == false) {
-                return false;
-            }
-            return states.Dependent.operator[operator](reference, value);
-        },
         Function: function (reference, value) {
             // The "reference" variable is a comparison function.
             return reference(value);
@@ -126,32 +109,7 @@
             return (typeof value === 'string') ? compare(reference.toString(), value) : compare(reference, value);
         }
     };
-    states.Dependent.operator = {
-        or: function(reference, value) {
-            var i = 0;
-            while (reference[i]) {
-                if (reference[i] == value) return true;
-                i++;
-            }
-            for (var key in reference) {
-                return (reference.hasOwnProperty(key) && value.indexOf(reference[key]) === -1)  ? false : true;
-            }
-            return false;
-        },
-        xor: function(reference, value) {
-            var i = 0;
-            while (reference[i]) {
-                if (reference[i] == value) return true;
-                i++;
-            }
-            return false;
-        },
-        and: function(reference, value) {
-            for (var key in reference) {
-                return ((reference.hasOwnProperty(key) && value.indexOf(reference[key]) === -1) || (reference.length != value.length)) ? false : true;
-            }
-        },
-    };
+
     states.Dependent.prototype = {
 
         /**
@@ -168,6 +126,7 @@
         initializeDependee: function (selector, dependeeStates) {
             var state;
             var self = this;
+
             function stateEventHandler(e) {
                 self.update(e.data.selector, e.data.state, e.value);
             }
@@ -178,7 +137,6 @@
             for (var i in dependeeStates) {
                 if (dependeeStates.hasOwnProperty(i)) {
                     state = dependeeStates[i];
-
                     // Make sure we're not initializing this selector/state combination
                     // twice.
                     if ($.inArray(state, dependeeStates) === -1) {
@@ -392,6 +350,7 @@
             this.verifyConstraints(this.constraints);
             // Restore the original function.
             this.compare = _compare;
+
             return cache;
         }
     };
