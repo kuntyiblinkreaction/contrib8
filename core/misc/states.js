@@ -71,7 +71,6 @@
      *   arbitrary AND and OR clauses.
      */
     states.Dependent = function (args) {
-
         $.extend(this, {values: {}, oldValue: null}, args);
 
         this.dependees = this.getDependees();
@@ -126,6 +125,7 @@
             return (typeof value === 'string') ? compare(reference.toString(), value) : compare(reference, value);
         }
     };
+
     states.Dependent.operator = {
         or: function(reference, value) {
             var i = 0;
@@ -152,6 +152,7 @@
             }
         },
     };
+
     states.Dependent.prototype = {
 
         /**
@@ -168,6 +169,7 @@
         initializeDependee: function (selector, dependeeStates) {
             var state;
             var self = this;
+
             function stateEventHandler(e) {
                 self.update(e.data.selector, e.data.state, e.value);
             }
@@ -178,7 +180,6 @@
             for (var i in dependeeStates) {
                 if (dependeeStates.hasOwnProperty(i)) {
                     state = dependeeStates[i];
-
                     // Make sure we're not initializing this selector/state combination
                     // twice.
                     if ($.inArray(state, dependeeStates) === -1) {
@@ -392,6 +393,7 @@
             this.verifyConstraints(this.constraints);
             // Restore the original function.
             this.compare = _compare;
+
             return cache;
         }
     };
